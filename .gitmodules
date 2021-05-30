@@ -1,0 +1,9 @@
+[submodule "src/common"]
+	path = src/common
+	url = ssh://git@gitlab.adecy.fr:2224/dietrich/can/caniot/caniot-common.git
+[submodule "src/nodes/garage"]
+	path = src/nodes/garage
+	url = ssh://git@gitlab.adecy.fr:2224/dietrich/can/caniot/node-garage-door-controller.git
+[submodule "src/nodes/outsens"]
+	path = src/nodes/outsens
+	url = ssh://git@gitlab.adecy.fr:2224/dietrich/can/caniot/outsens1.git
