@@ -10,7 +10,7 @@ ELF Header:
   Version:                           0x1
   Entry point address:               0x0
   Start of program headers:          0 (bytes into file)
-  Start of section headers:          2808 (bytes into file)
+  Start of section headers:          2820 (bytes into file)
   Flags:                             0x85, avr:5, link-relax
   Size of this header:               52 (bytes)
   Size of program headers:           0 (bytes)
@@ -26,17 +26,17 @@ Section Headers:
   [ 2] .data             PROGBITS        00000000 000034 000000 00  WA  0   0  1
   [ 3] .bss              NOBITS          00000000 000034 000000 00  WA  0   0  1
   [ 4] .gnu.lto_.profile PROGBITS        00000000 000034 00000f 00   E  0   0  1
-  [ 5] .gnu.lto_.icf.696 PROGBITS        00000000 000043 000018 00   E  0   0  1
+  [ 5] .gnu.lto_.icf.70c PROGBITS        00000000 000043 000018 00   E  0   0  1
   [ 6] .gnu.lto_.inline. PROGBITS        00000000 00005b 00000f 00   E  0   0  1
   [ 7] .gnu.lto_.purecon PROGBITS        00000000 00006a 00000f 00   E  0   0  1
-  [ 8] .gnu.lto__ZL13_an PROGBITS        00000000 000079 0000b2 00   E  0   0  1
-  [ 9] .gnu.lto_.symbol_ PROGBITS        00000000 00012b 00002f 00   E  0   0  1
-  [10] .gnu.lto_.refs.69 PROGBITS        00000000 00015a 00000f 00   E  0   0  1
-  [11] .gnu.lto_.decls.6 PROGBITS        00000000 000169 0005a2 00   E  0   0  1
+  [ 8] .gnu.lto__ZL13_an PROGBITS        00000000 000079 0000b9 00   E  0   0  1
+  [ 9] .gnu.lto_.symbol_ PROGBITS        00000000 000132 00002f 00   E  0   0  1
+  [10] .gnu.lto_.refs.70 PROGBITS        00000000 000161 00000f 00   E  0   0  1
+  [11] .gnu.lto_.decls.7 PROGBITS        00000000 000170 00059b 00   E  0   0  1
   [12] .gnu.lto_.symtab. PROGBITS        00000000 00070b 000000 00   E  0   0  1
   [13] .gnu.lto_.opts    PROGBITS        00000000 00070b 0000dd 00   E  0   0  1
   [14] .comment          PROGBITS        00000000 0007e8 000012 01  MS  0   0  1
-  [15] .shstrtab         STRTAB          00000000 0009c4 000134 00      0   0  1
+  [15] .shstrtab         STRTAB          00000000 0009c4 00013d 00      0   0  1
   [16] .symtab           SYMTAB          00000000 0007fc 000170 10     17  21  4
   [17] .strtab           STRTAB          00000000 00096c 000058 00      0   0  1
 Key to Flags:
