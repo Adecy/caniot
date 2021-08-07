@@ -163,15 +163,10 @@ SECTIONS
     *(.fini0)  /* Infinite loop after program termination.  */
     KEEP (*(.fini0))
      _etext = . ;
-    PROVIDE(__device_identification__ = .) ;
-    *(.device_identification)
   }  > text
   .data          :
   {
      PROVIDE (__data_start = .) ;
-     PROVIDE (__atributes_start = .) ;
-      *(.attributes)
-     PROVIDE  (__atributes_end = .) ;
     *(.data)
      *(.data*)
     *(.gnu.linkonce.d*)

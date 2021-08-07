@@ -2813,12 +2813,12 @@ typedef union
 } can_id_t;
 #pragma pack(1)
 # 13 "src/common/caniot/attributes.h" 2
-# 1 "src/common/types.h" 1
+# 1 "src/common/caniot/types.h" 1
 
 
 
 # 1 "/usr/lib/gcc/avr/5.4.0/include/stddef.h" 1 3 4
-# 5 "src/common/types.h" 2
+# 5 "src/common/caniot/types.h" 2
 
 
 typedef struct
@@ -2893,18 +2893,32 @@ typedef struct
 class Configuration
 {
 public:
-    config_t data;
+    config_t *data;
+
+    uint8_t m_checksum = 0;
 
     Configuration(void) { }
 
+    uint8_t checksum(void) const;
+
+    void reset(void)
+    {
+
+    }
+
     uint32_t get_telemetry_period(void) const
     {
-        return (uint32_t) eeprom_read_dword(&data.telemetry_period);
+        return (uint32_t) eeprom_read_dword(&data->telemetry_period);
+    }
+
+    void set_telemetry_period(uint16_t telemetry_period)
+    {
+        eeprom_update_dword(&data->telemetry_period, telemetry_period);
     }
 
     void get_switching_point(uint8_t idx, switching_point_t *sp_p) const
     {
-        eeprom_read_block(sp_p, &data.schedule[idx], sizeof(switching_point_t));
+        eeprom_read_block(sp_p, &data->schedule[idx], sizeof(switching_point_t));
     }
 };
 # 15 "src/common/caniot/attributes.h" 2
@@ -2918,8 +2932,6 @@ typedef enum : uint8_t
     READONLY = 1 << 3,
     PRIVATE = 1 << 4,
 } section_option_t;
-
-
 
 typedef uint16_t key_t;
 
@@ -2937,341 +2949,347 @@ typedef struct
     uint8_t offset;
     uint8_t read_size;
 } attr_ref_t;
-
-
-
-struct attribute_t
+# 83 "src/common/caniot/attributes.h"
+class Attributes
 {
-    uint8_t offset;
-    uint8_t size;
-    uint8_t readonly;
-    char name[30];
-};
+protected:
+    struct attribute_t
+    {
+        uint8_t offset;
+        uint8_t size;
+        uint8_t readonly;
+        char name[30];
+    };
 
-struct section_t
-{
-    uint8_t options;
-    char name[15];
-    const attribute_t * array;
-    uint8_t array_size;
-};
-# 98 "src/common/caniot/attributes.h"
-static const struct attribute_t identification_attr[] 
-# 98 "src/common/caniot/attributes.h" 3
-                                                     __attribute__((__progmem__)) 
-# 98 "src/common/caniot/attributes.h"
-                                                             = {
-    { (uint8_t) 
-# 99 "src/common/caniot/attributes.h" 3 4
-   __builtin_offsetof (
-# 99 "src/common/caniot/attributes.h"
-   identification_t
-# 99 "src/common/caniot/attributes.h" 3 4
-   , 
-# 99 "src/common/caniot/attributes.h"
-   deviceid
-# 99 "src/common/caniot/attributes.h" 3 4
-   )
-# 99 "src/common/caniot/attributes.h"
-   , (uint8_t)sizeof(identification_t ::deviceid), (uint8_t)READONLY ? READONLY : 0, "nodeid" },
-    { (uint8_t) 
-# 100 "src/common/caniot/attributes.h" 3 4
-   __builtin_offsetof (
-# 100 "src/common/caniot/attributes.h"
-   identification_t
-# 100 "src/common/caniot/attributes.h" 3 4
-   , 
-# 100 "src/common/caniot/attributes.h"
-   version
-# 100 "src/common/caniot/attributes.h" 3 4
-   )
-# 100 "src/common/caniot/attributes.h"
-   , (uint8_t)sizeof(identification_t ::version), (uint8_t)READONLY ? READONLY : 0, "version" },
-    { (uint8_t) 
-# 101 "src/common/caniot/attributes.h" 3 4
-   __builtin_offsetof (
-# 101 "src/common/caniot/attributes.h"
-   identification_t
-# 101 "src/common/caniot/attributes.h" 3 4
-   , 
-# 101 "src/common/caniot/attributes.h"
-   name
-# 101 "src/common/caniot/attributes.h" 3 4
-   )
-# 101 "src/common/caniot/attributes.h"
-   , (uint8_t)sizeof(identification_t ::name), (uint8_t)READONLY ? READONLY : 0, "name" },
-};
+    struct section_t
+    {
+        uint8_t options;
+        char name[15];
+        const attribute_t *array;
+        uint8_t array_size;
+    };
 
-static const struct attribute_t system_attr[] 
-# 104 "src/common/caniot/attributes.h" 3
-                                             __attribute__((__progmem__)) 
+    static constexpr const struct attribute_t identification_attr[] 
+# 102 "src/common/caniot/attributes.h" 3
+                                                                   __attribute__((__progmem__)) 
+# 102 "src/common/caniot/attributes.h"
+                                                                           = {
+        { (uint8_t) 
+# 103 "src/common/caniot/attributes.h" 3 4
+       __builtin_offsetof (
+# 103 "src/common/caniot/attributes.h"
+       identification_t
+# 103 "src/common/caniot/attributes.h" 3 4
+       , 
+# 103 "src/common/caniot/attributes.h"
+       deviceid
+# 103 "src/common/caniot/attributes.h" 3 4
+       )
+# 103 "src/common/caniot/attributes.h"
+       , (uint8_t)sizeof(identification_t ::deviceid), (uint8_t)READONLY ? READONLY : 0, "nodeid" },
+        { (uint8_t) 
+# 104 "src/common/caniot/attributes.h" 3 4
+       __builtin_offsetof (
 # 104 "src/common/caniot/attributes.h"
-                                                     = {
-    { (uint8_t) 
+       identification_t
+# 104 "src/common/caniot/attributes.h" 3 4
+       , 
+# 104 "src/common/caniot/attributes.h"
+       version
+# 104 "src/common/caniot/attributes.h" 3 4
+       )
+# 104 "src/common/caniot/attributes.h"
+       , (uint8_t)sizeof(identification_t ::version), (uint8_t)READONLY ? READONLY : 0, "version" },
+        { (uint8_t) 
 # 105 "src/common/caniot/attributes.h" 3 4
-   __builtin_offsetof (
+       __builtin_offsetof (
 # 105 "src/common/caniot/attributes.h"
-   system_t
+       identification_t
 # 105 "src/common/caniot/attributes.h" 3 4
-   , 
+       , 
 # 105 "src/common/caniot/attributes.h"
-   uptime
+       name
 # 105 "src/common/caniot/attributes.h" 3 4
-   )
+       )
 # 105 "src/common/caniot/attributes.h"
-   , (uint8_t)sizeof(system_t ::uptime), (uint8_t)READONLY ? READONLY : 0, "uptime" },
-    { (uint8_t) 
-# 106 "src/common/caniot/attributes.h" 3 4
-   __builtin_offsetof (
-# 106 "src/common/caniot/attributes.h"
-   system_t
-# 106 "src/common/caniot/attributes.h" 3 4
-   , 
-# 106 "src/common/caniot/attributes.h"
-   abstime
-# 106 "src/common/caniot/attributes.h" 3 4
-   )
-# 106 "src/common/caniot/attributes.h"
-   , (uint8_t)sizeof(system_t ::abstime), (uint8_t)WRITABLE ? READONLY : 0, "abstime" },
-    { (uint8_t) 
-# 107 "src/common/caniot/attributes.h" 3 4
-   __builtin_offsetof (
-# 107 "src/common/caniot/attributes.h"
-   system_t
-# 107 "src/common/caniot/attributes.h" 3 4
-   , 
-# 107 "src/common/caniot/attributes.h"
-   calculated_abstime
-# 107 "src/common/caniot/attributes.h" 3 4
-   )
-# 107 "src/common/caniot/attributes.h"
-   , (uint8_t)sizeof(system_t ::calculated_abstime), (uint8_t)READONLY ? READONLY : 0, "calculated_abstime" },
-    { (uint8_t) 
-# 108 "src/common/caniot/attributes.h" 3 4
-   __builtin_offsetof (
-# 108 "src/common/caniot/attributes.h"
-   system_t
-# 108 "src/common/caniot/attributes.h" 3 4
-   , 
-# 108 "src/common/caniot/attributes.h"
-   uptime_shift
-# 108 "src/common/caniot/attributes.h" 3 4
-   )
-# 108 "src/common/caniot/attributes.h"
-   , (uint8_t)sizeof(system_t ::uptime_shift), (uint8_t)READONLY ? READONLY : 0, "uptime_shift" },
-    { (uint8_t) 
-# 109 "src/common/caniot/attributes.h" 3 4
-   __builtin_offsetof (
-# 109 "src/common/caniot/attributes.h"
-   system_t
-# 109 "src/common/caniot/attributes.h" 3 4
-   , 
-# 109 "src/common/caniot/attributes.h"
-   last_telemetry
-# 109 "src/common/caniot/attributes.h" 3 4
-   )
-# 109 "src/common/caniot/attributes.h"
-   , (uint8_t)sizeof(system_t ::last_telemetry), (uint8_t)READONLY ? READONLY : 0, "last_telemetry" },
-    { (uint8_t) 
-# 110 "src/common/caniot/attributes.h" 3 4
-   __builtin_offsetof (
-# 110 "src/common/caniot/attributes.h"
-   system_t
-# 110 "src/common/caniot/attributes.h" 3 4
-   , 
-# 110 "src/common/caniot/attributes.h"
-   stats.received.total
-# 110 "src/common/caniot/attributes.h" 3 4
-   )
-# 110 "src/common/caniot/attributes.h"
-   , (uint8_t)sizeof(system_t ::stats.received.total), (uint8_t)READONLY ? READONLY : 0, "received.total" },
-    { (uint8_t) 
-# 111 "src/common/caniot/attributes.h" 3 4
-   __builtin_offsetof (
-# 111 "src/common/caniot/attributes.h"
-   system_t
-# 111 "src/common/caniot/attributes.h" 3 4
-   , 
-# 111 "src/common/caniot/attributes.h"
-   stats.received.read_attribute
-# 111 "src/common/caniot/attributes.h" 3 4
-   )
-# 111 "src/common/caniot/attributes.h"
-   , (uint8_t)sizeof(system_t ::stats.received.read_attribute), (uint8_t)READONLY ? READONLY : 0, "received.read_attribute" },
-    { (uint8_t) 
-# 112 "src/common/caniot/attributes.h" 3 4
-   __builtin_offsetof (
-# 112 "src/common/caniot/attributes.h"
-   system_t
-# 112 "src/common/caniot/attributes.h" 3 4
-   , 
-# 112 "src/common/caniot/attributes.h"
-   stats.received.write_attribute
-# 112 "src/common/caniot/attributes.h" 3 4
-   )
-# 112 "src/common/caniot/attributes.h"
-   , (uint8_t)sizeof(system_t ::stats.received.write_attribute), (uint8_t)READONLY ? READONLY : 0, "received.write_attribute" },
-    { (uint8_t) 
-# 113 "src/common/caniot/attributes.h" 3 4
-   __builtin_offsetof (
-# 113 "src/common/caniot/attributes.h"
-   system_t
-# 113 "src/common/caniot/attributes.h" 3 4
-   , 
-# 113 "src/common/caniot/attributes.h"
-   stats.received.command
-# 113 "src/common/caniot/attributes.h" 3 4
-   )
-# 113 "src/common/caniot/attributes.h"
-   , (uint8_t)sizeof(system_t ::stats.received.command), (uint8_t)READONLY ? READONLY : 0, "received.command" },
-    { (uint8_t) 
-# 114 "src/common/caniot/attributes.h" 3 4
-   __builtin_offsetof (
-# 114 "src/common/caniot/attributes.h"
-   system_t
-# 114 "src/common/caniot/attributes.h" 3 4
-   , 
-# 114 "src/common/caniot/attributes.h"
-   stats.received.request_telemetry
-# 114 "src/common/caniot/attributes.h" 3 4
-   )
-# 114 "src/common/caniot/attributes.h"
-   , (uint8_t)sizeof(system_t ::stats.received.request_telemetry), (uint8_t)READONLY ? READONLY : 0, "received.request_telemetry" },
-    { (uint8_t) 
-# 115 "src/common/caniot/attributes.h" 3 4
-   __builtin_offsetof (
-# 115 "src/common/caniot/attributes.h"
-   system_t
-# 115 "src/common/caniot/attributes.h" 3 4
-   , 
-# 115 "src/common/caniot/attributes.h"
-   stats.received.processed
-# 115 "src/common/caniot/attributes.h" 3 4
-   )
-# 115 "src/common/caniot/attributes.h"
-   , (uint8_t)sizeof(system_t ::stats.received.processed), (uint8_t)READONLY ? READONLY : 0, "received.processed" },
-    { (uint8_t) 
-# 116 "src/common/caniot/attributes.h" 3 4
-   __builtin_offsetof (
-# 116 "src/common/caniot/attributes.h"
-   system_t
-# 116 "src/common/caniot/attributes.h" 3 4
-   , 
-# 116 "src/common/caniot/attributes.h"
-   stats.received.query_failed
-# 116 "src/common/caniot/attributes.h" 3 4
-   )
-# 116 "src/common/caniot/attributes.h"
-   , (uint8_t)sizeof(system_t ::stats.received.query_failed), (uint8_t)READONLY ? READONLY : 0, "received.query_failed" },
-    { (uint8_t) 
-# 117 "src/common/caniot/attributes.h" 3 4
-   __builtin_offsetof (
-# 117 "src/common/caniot/attributes.h"
-   system_t
-# 117 "src/common/caniot/attributes.h" 3 4
-   , 
-# 117 "src/common/caniot/attributes.h"
-   stats.sent.total
-# 117 "src/common/caniot/attributes.h" 3 4
-   )
-# 117 "src/common/caniot/attributes.h"
-   , (uint8_t)sizeof(system_t ::stats.sent.total), (uint8_t)READONLY ? READONLY : 0, "sent.total" },
-    { (uint8_t) 
-# 118 "src/common/caniot/attributes.h" 3 4
-   __builtin_offsetof (
-# 118 "src/common/caniot/attributes.h"
-   system_t
-# 118 "src/common/caniot/attributes.h" 3 4
-   , 
-# 118 "src/common/caniot/attributes.h"
-   stats.sent.telemetry
-# 118 "src/common/caniot/attributes.h" 3 4
-   )
-# 118 "src/common/caniot/attributes.h"
-   , (uint8_t)sizeof(system_t ::stats.sent.telemetry), (uint8_t)READONLY ? READONLY : 0, "sent.telemetry" },
-    { (uint8_t) 
-# 119 "src/common/caniot/attributes.h" 3 4
-   __builtin_offsetof (
-# 119 "src/common/caniot/attributes.h"
-   system_t
-# 119 "src/common/caniot/attributes.h" 3 4
-   , 
-# 119 "src/common/caniot/attributes.h"
-   last_query_error
-# 119 "src/common/caniot/attributes.h" 3 4
-   )
-# 119 "src/common/caniot/attributes.h"
-   , (uint8_t)sizeof(system_t ::last_query_error), (uint8_t)READONLY ? READONLY : 0, "last_query_error" },
-    { (uint8_t) 
-# 120 "src/common/caniot/attributes.h" 3 4
-   __builtin_offsetof (
-# 120 "src/common/caniot/attributes.h"
-   system_t
-# 120 "src/common/caniot/attributes.h" 3 4
-   , 
-# 120 "src/common/caniot/attributes.h"
-   last_telemetry_error
-# 120 "src/common/caniot/attributes.h" 3 4
-   )
-# 120 "src/common/caniot/attributes.h"
-   , (uint8_t)sizeof(system_t ::last_telemetry_error), (uint8_t)READONLY ? READONLY : 0, "last_telemetry_error" },
-    { (uint8_t) 
-# 121 "src/common/caniot/attributes.h" 3 4
-   __builtin_offsetof (
-# 121 "src/common/caniot/attributes.h"
-   system_t
-# 121 "src/common/caniot/attributes.h" 3 4
-   , 
-# 121 "src/common/caniot/attributes.h"
-   battery
-# 121 "src/common/caniot/attributes.h" 3 4
-   )
-# 121 "src/common/caniot/attributes.h"
-   , (uint8_t)sizeof(system_t ::battery), (uint8_t)READONLY ? READONLY : 0, "battery" },
-};
+       , (uint8_t)sizeof(identification_t ::name), (uint8_t)READONLY ? READONLY : 0, "name" },
+    };
 
-static const struct attribute_t config_attr[] 
-# 124 "src/common/caniot/attributes.h" 3
-                                             __attribute__((__progmem__)) 
+    static constexpr const struct attribute_t system_attr[] 
+# 108 "src/common/caniot/attributes.h" 3
+                                                           __attribute__((__progmem__)) 
+# 108 "src/common/caniot/attributes.h"
+                                                                   = {
+        { (uint8_t) 
+# 109 "src/common/caniot/attributes.h" 3 4
+       __builtin_offsetof (
+# 109 "src/common/caniot/attributes.h"
+       system_t
+# 109 "src/common/caniot/attributes.h" 3 4
+       , 
+# 109 "src/common/caniot/attributes.h"
+       uptime
+# 109 "src/common/caniot/attributes.h" 3 4
+       )
+# 109 "src/common/caniot/attributes.h"
+       , (uint8_t)sizeof(system_t ::uptime), (uint8_t)READONLY ? READONLY : 0, "uptime" },
+        { (uint8_t) 
+# 110 "src/common/caniot/attributes.h" 3 4
+       __builtin_offsetof (
+# 110 "src/common/caniot/attributes.h"
+       system_t
+# 110 "src/common/caniot/attributes.h" 3 4
+       , 
+# 110 "src/common/caniot/attributes.h"
+       abstime
+# 110 "src/common/caniot/attributes.h" 3 4
+       )
+# 110 "src/common/caniot/attributes.h"
+       , (uint8_t)sizeof(system_t ::abstime), (uint8_t)WRITABLE ? READONLY : 0, "abstime" },
+        { (uint8_t) 
+# 111 "src/common/caniot/attributes.h" 3 4
+       __builtin_offsetof (
+# 111 "src/common/caniot/attributes.h"
+       system_t
+# 111 "src/common/caniot/attributes.h" 3 4
+       , 
+# 111 "src/common/caniot/attributes.h"
+       calculated_abstime
+# 111 "src/common/caniot/attributes.h" 3 4
+       )
+# 111 "src/common/caniot/attributes.h"
+       , (uint8_t)sizeof(system_t ::calculated_abstime), (uint8_t)READONLY ? READONLY : 0, "calculated_abstime" },
+        { (uint8_t) 
+# 112 "src/common/caniot/attributes.h" 3 4
+       __builtin_offsetof (
+# 112 "src/common/caniot/attributes.h"
+       system_t
+# 112 "src/common/caniot/attributes.h" 3 4
+       , 
+# 112 "src/common/caniot/attributes.h"
+       uptime_shift
+# 112 "src/common/caniot/attributes.h" 3 4
+       )
+# 112 "src/common/caniot/attributes.h"
+       , (uint8_t)sizeof(system_t ::uptime_shift), (uint8_t)READONLY ? READONLY : 0, "uptime_shift" },
+        { (uint8_t) 
+# 113 "src/common/caniot/attributes.h" 3 4
+       __builtin_offsetof (
+# 113 "src/common/caniot/attributes.h"
+       system_t
+# 113 "src/common/caniot/attributes.h" 3 4
+       , 
+# 113 "src/common/caniot/attributes.h"
+       last_telemetry
+# 113 "src/common/caniot/attributes.h" 3 4
+       )
+# 113 "src/common/caniot/attributes.h"
+       , (uint8_t)sizeof(system_t ::last_telemetry), (uint8_t)READONLY ? READONLY : 0, "last_telemetry" },
+        { (uint8_t) 
+# 114 "src/common/caniot/attributes.h" 3 4
+       __builtin_offsetof (
+# 114 "src/common/caniot/attributes.h"
+       system_t
+# 114 "src/common/caniot/attributes.h" 3 4
+       , 
+# 114 "src/common/caniot/attributes.h"
+       stats.received.total
+# 114 "src/common/caniot/attributes.h" 3 4
+       )
+# 114 "src/common/caniot/attributes.h"
+       , (uint8_t)sizeof(system_t ::stats.received.total), (uint8_t)READONLY ? READONLY : 0, "received.total" },
+        { (uint8_t) 
+# 115 "src/common/caniot/attributes.h" 3 4
+       __builtin_offsetof (
+# 115 "src/common/caniot/attributes.h"
+       system_t
+# 115 "src/common/caniot/attributes.h" 3 4
+       , 
+# 115 "src/common/caniot/attributes.h"
+       stats.received.read_attribute
+# 115 "src/common/caniot/attributes.h" 3 4
+       )
+# 115 "src/common/caniot/attributes.h"
+       , (uint8_t)sizeof(system_t ::stats.received.read_attribute), (uint8_t)READONLY ? READONLY : 0, "received.read_attribute" },
+        { (uint8_t) 
+# 116 "src/common/caniot/attributes.h" 3 4
+       __builtin_offsetof (
+# 116 "src/common/caniot/attributes.h"
+       system_t
+# 116 "src/common/caniot/attributes.h" 3 4
+       , 
+# 116 "src/common/caniot/attributes.h"
+       stats.received.write_attribute
+# 116 "src/common/caniot/attributes.h" 3 4
+       )
+# 116 "src/common/caniot/attributes.h"
+       , (uint8_t)sizeof(system_t ::stats.received.write_attribute), (uint8_t)READONLY ? READONLY : 0, "received.write_attribute" },
+        { (uint8_t) 
+# 117 "src/common/caniot/attributes.h" 3 4
+       __builtin_offsetof (
+# 117 "src/common/caniot/attributes.h"
+       system_t
+# 117 "src/common/caniot/attributes.h" 3 4
+       , 
+# 117 "src/common/caniot/attributes.h"
+       stats.received.command
+# 117 "src/common/caniot/attributes.h" 3 4
+       )
+# 117 "src/common/caniot/attributes.h"
+       , (uint8_t)sizeof(system_t ::stats.received.command), (uint8_t)READONLY ? READONLY : 0, "received.command" },
+        { (uint8_t) 
+# 118 "src/common/caniot/attributes.h" 3 4
+       __builtin_offsetof (
+# 118 "src/common/caniot/attributes.h"
+       system_t
+# 118 "src/common/caniot/attributes.h" 3 4
+       , 
+# 118 "src/common/caniot/attributes.h"
+       stats.received.request_telemetry
+# 118 "src/common/caniot/attributes.h" 3 4
+       )
+# 118 "src/common/caniot/attributes.h"
+       , (uint8_t)sizeof(system_t ::stats.received.request_telemetry), (uint8_t)READONLY ? READONLY : 0, "received.request_telemetry" },
+        { (uint8_t) 
+# 119 "src/common/caniot/attributes.h" 3 4
+       __builtin_offsetof (
+# 119 "src/common/caniot/attributes.h"
+       system_t
+# 119 "src/common/caniot/attributes.h" 3 4
+       , 
+# 119 "src/common/caniot/attributes.h"
+       stats.received.processed
+# 119 "src/common/caniot/attributes.h" 3 4
+       )
+# 119 "src/common/caniot/attributes.h"
+       , (uint8_t)sizeof(system_t ::stats.received.processed), (uint8_t)READONLY ? READONLY : 0, "received.processed" },
+        { (uint8_t) 
+# 120 "src/common/caniot/attributes.h" 3 4
+       __builtin_offsetof (
+# 120 "src/common/caniot/attributes.h"
+       system_t
+# 120 "src/common/caniot/attributes.h" 3 4
+       , 
+# 120 "src/common/caniot/attributes.h"
+       stats.received.query_failed
+# 120 "src/common/caniot/attributes.h" 3 4
+       )
+# 120 "src/common/caniot/attributes.h"
+       , (uint8_t)sizeof(system_t ::stats.received.query_failed), (uint8_t)READONLY ? READONLY : 0, "received.query_failed" },
+        { (uint8_t) 
+# 121 "src/common/caniot/attributes.h" 3 4
+       __builtin_offsetof (
+# 121 "src/common/caniot/attributes.h"
+       system_t
+# 121 "src/common/caniot/attributes.h" 3 4
+       , 
+# 121 "src/common/caniot/attributes.h"
+       stats.sent.total
+# 121 "src/common/caniot/attributes.h" 3 4
+       )
+# 121 "src/common/caniot/attributes.h"
+       , (uint8_t)sizeof(system_t ::stats.sent.total), (uint8_t)READONLY ? READONLY : 0, "sent.total" },
+        { (uint8_t) 
+# 122 "src/common/caniot/attributes.h" 3 4
+       __builtin_offsetof (
+# 122 "src/common/caniot/attributes.h"
+       system_t
+# 122 "src/common/caniot/attributes.h" 3 4
+       , 
+# 122 "src/common/caniot/attributes.h"
+       stats.sent.telemetry
+# 122 "src/common/caniot/attributes.h" 3 4
+       )
+# 122 "src/common/caniot/attributes.h"
+       , (uint8_t)sizeof(system_t ::stats.sent.telemetry), (uint8_t)READONLY ? READONLY : 0, "sent.telemetry" },
+        { (uint8_t) 
+# 123 "src/common/caniot/attributes.h" 3 4
+       __builtin_offsetof (
+# 123 "src/common/caniot/attributes.h"
+       system_t
+# 123 "src/common/caniot/attributes.h" 3 4
+       , 
+# 123 "src/common/caniot/attributes.h"
+       last_query_error
+# 123 "src/common/caniot/attributes.h" 3 4
+       )
+# 123 "src/common/caniot/attributes.h"
+       , (uint8_t)sizeof(system_t ::last_query_error), (uint8_t)READONLY ? READONLY : 0, "last_query_error" },
+        { (uint8_t) 
+# 124 "src/common/caniot/attributes.h" 3 4
+       __builtin_offsetof (
 # 124 "src/common/caniot/attributes.h"
-                                                     = {
-    { (uint8_t) 
+       system_t
+# 124 "src/common/caniot/attributes.h" 3 4
+       , 
+# 124 "src/common/caniot/attributes.h"
+       last_telemetry_error
+# 124 "src/common/caniot/attributes.h" 3 4
+       )
+# 124 "src/common/caniot/attributes.h"
+       , (uint8_t)sizeof(system_t ::last_telemetry_error), (uint8_t)READONLY ? READONLY : 0, "last_telemetry_error" },
+        { (uint8_t) 
 # 125 "src/common/caniot/attributes.h" 3 4
-   __builtin_offsetof (
+       __builtin_offsetof (
 # 125 "src/common/caniot/attributes.h"
-   config_t
+       system_t
 # 125 "src/common/caniot/attributes.h" 3 4
-   , 
+       , 
 # 125 "src/common/caniot/attributes.h"
-   telemetry_period
+       battery
 # 125 "src/common/caniot/attributes.h" 3 4
-   )
+       )
 # 125 "src/common/caniot/attributes.h"
-   , (uint8_t)sizeof(config_t ::telemetry_period), (uint8_t)WRITABLE ? READONLY : 0, "telemetry_period" },
-};
+       , (uint8_t)sizeof(system_t ::battery), (uint8_t)READONLY ? READONLY : 0, "battery" },
+    };
 
-static const struct section_t attr_sections[] 
+    static constexpr const struct attribute_t config_attr[] 
 # 128 "src/common/caniot/attributes.h" 3
-                                             __attribute__((__progmem__)) 
+                                                           __attribute__((__progmem__)) 
 # 128 "src/common/caniot/attributes.h"
-                                                     = {
-    { RAM | PROGMEMORY | READONLY, "identification", identification_attr, (sizeof(identification_attr) / sizeof(identification_attr[0])) },
-    { RAM, "system", system_attr, (sizeof(system_attr) / sizeof(system_attr[0])) },
-    { EEPROM, "configuration", config_attr, (sizeof(config_attr) / sizeof(config_attr[0])) }
+                                                                   = {
+        { (uint8_t) 
+# 129 "src/common/caniot/attributes.h" 3 4
+       __builtin_offsetof (
+# 129 "src/common/caniot/attributes.h"
+       config_t
+# 129 "src/common/caniot/attributes.h" 3 4
+       , 
+# 129 "src/common/caniot/attributes.h"
+       telemetry_period
+# 129 "src/common/caniot/attributes.h" 3 4
+       )
+# 129 "src/common/caniot/attributes.h"
+       , (uint8_t)sizeof(config_t ::telemetry_period), (uint8_t)WRITABLE ? READONLY : 0, "telemetry_period" },
+    };
+
+    static constexpr const struct section_t attr_sections[] 
+# 132 "src/common/caniot/attributes.h" 3
+                                                           __attribute__((__progmem__)) 
+# 132 "src/common/caniot/attributes.h"
+                                                                   = {
+        { RAM | PROGMEMORY | READONLY, "identification", identification_attr, (sizeof(identification_attr) / sizeof(identification_attr[0])) },
+        { RAM, "system", system_attr, (sizeof(system_attr) / sizeof(system_attr[0])) },
+        { EEPROM, "configuration", config_attr, (sizeof(config_attr) / sizeof(config_attr[0])) },
+    };
+
+public:
+    static const uint8_t resolve(const key_t key, attr_ref_t *const p_attr_ref);
+# 148 "src/common/caniot/attributes.h"
+    static const uint8_t read(const attr_ref_t *const attr_ref, value_t *const p_value);
+    static const uint8_t write(const attr_ref_t *const attr_ref, const value_t value);
+
+    static void *get_section_address(const uint8_t section);
 };
-
-
-
-const uint8_t resolve_attribute(const key_t key, attr_ref_t *const p_attr_ref);
 # 2 "src/common/caniot/attributes.cpp" 2
 
-# 1 "src/common/caniot/utils.h" 1
+# 1 "src/common/caniot/misc.h" 1
 
 
 
 
 # 1 "/usr/lib/gcc/avr/5.4.0/include/stddef.h" 1 3 4
-# 6 "src/common/caniot/utils.h" 2
+# 6 "src/common/caniot/misc.h" 2
 
 
 
@@ -3287,10 +3305,9 @@ const uint8_t resolve_attribute(const key_t key, attr_ref_t *const p_attr_ref);
 
 
 
-
 extern "C" {
-# 42 "src/common/uart.h"
-void _usart_init(const uint8_t baudrate_ubrr);
+# 40 "src/common/uart.h"
+void _usart_init(const uint16_t baudrate_ubrr);
 
 
 
@@ -3367,7 +3384,7 @@ void usart_hex16(const uint16_t val);
 
 
 void usart_send_hex(const uint8_t* buffer, size_t len);
-# 127 "src/common/uart.h"
+# 125 "src/common/uart.h"
 void usart_send_p(const char* buffer, size_t len);
 
 
@@ -3386,7 +3403,7 @@ void usart_printl_p(const char * text);
 
 
 }
-# 10 "src/common/caniot/utils.h" 2
+# 10 "src/common/caniot/misc.h" 2
 # 1 "src/common/caniot/device.h" 1
 
 
@@ -3683,7 +3700,7 @@ private:
 # 13 "src/common/caniot/caniot.h" 2
 # 6 "src/common/caniot/device.h" 2
 
-# 1 "src/common/caniot/utils.h" 1
+# 1 "src/common/caniot/misc.h" 1
 # 8 "src/common/caniot/device.h" 2
 
 
@@ -3823,14 +3840,69 @@ void timer2_uptime_centiseconds(time_cs_t *p_uptime_cs);
 }
 # 12 "src/common/caniot/device.h" 2
 # 1 "src/common/caniot/data.h" 1
-# 10 "src/common/caniot/data.h"
+# 16 "src/common/caniot/data.h"
+struct contacts_set_t
+{
+    uint8_t c1: 1;
+    uint8_t c2: 1;
+    uint8_t c3: 1;
+    uint8_t c4: 1;
+    uint8_t c5: 1;
+    uint8_t c6: 1;
+    uint8_t c7: 1;
+    uint8_t c8: 1;
+};
+
+struct relays_set_t
+{
+    uint8_t r1: 1;
+    uint8_t r2: 1;
+    uint8_t r3: 1;
+    uint8_t r4: 1;
+    uint8_t r5: 1;
+    uint8_t r6: 1;
+    uint8_t r7: 1;
+    uint8_t r8: 1;
+};
+
+typedef int16_t temperature;
+
+
+
+struct CR_t
+{
+    contacts_set_t contacts;
+    relays_set_t relays;
+};
+
+struct CRA_t
+{
+    contacts_set_t contacts;
+    relays_set_t relays;
+    uint16_t analog: 10;
+};
+
+struct CRT_t
+{
+    contacts_set_t contacts;
+    relays_set_t relays;
+    int16_t temperature;
+};
+
+struct TTTT_t
+{
+    int16_t temperatures[4];
+};
+
+
+
+
+
+
+
 const uint8_t get_data_type_size(data_type_t dt);
 # 13 "src/common/caniot/device.h" 2
 # 25 "src/common/caniot/device.h"
-extern identification_t __device_identification__;
-
-
-
 class can_device
 {
 public:
@@ -3848,7 +3920,7 @@ public:
     uint8_t m_ext_int_pin;
     uint32_t m_speedset;
     uint8_t m_clockset;
-# 59 "src/common/caniot/device.h"
+# 55 "src/common/caniot/device.h"
     volatile uint8_t flags;
 
 
@@ -3874,17 +3946,7 @@ public:
 
     can_device() { };
 
-    can_device(mcp2515_can * p_can, uint8_t ext_int_pin, uint32_t speedset, uint8_t clockset) :
-    p_can(p_can), m_ext_int_pin(ext_int_pin), m_speedset(speedset), m_clockset(clockset), flags(0),
-    m_command_handler(nullptr)
-    {
-        p_instance = this;
-
-
-        memcpy_P(&identification, (const void*) &__device_identification__, sizeof(identification_t));
-
-
-    }
+    can_device(mcp2515_can * p_can, uint8_t ext_int_pin, uint32_t speedset, uint8_t clockset);
 
     static can_device* get_instance(void) { return p_instance; }
 
@@ -3911,16 +3973,11 @@ protected:
     uint8_t process_telemetry(void);
 
     uint8_t dispatch_request(Message &request, Message &response);
-# 129 "src/common/caniot/device.h"
-    static const uint8_t read_attribute(const attr_ref_t *const attr_ref, value_t *const p_value);
-    static const uint8_t write_attribute(const attr_ref_t *const attr_ref, const value_t value);
-
-    static void *get_section_address(const uint8_t section);
 
     void prepare_error(Message &request, const uint8_t errno);
     uint8_t send_response(Message &response);
 };
-# 11 "src/common/caniot/utils.h" 2
+# 11 "src/common/caniot/misc.h" 2
 
 
 
@@ -3932,9 +3989,9 @@ class Message;
 void print_can(const unsigned long id, const uint8_t * const buffer, const uint8_t len);
 
 void print_prog_string(
-# 21 "src/common/caniot/utils.h" 3
+# 21 "src/common/caniot/misc.h" 3
                       const char * 
-# 21 "src/common/caniot/utils.h"
+# 21 "src/common/caniot/misc.h"
                             const pgm_string_array, const uint8_t elem);
 
 void print_prog_query(const query_t qr);
@@ -3950,77 +4007,82 @@ void print_time_sec(uint32_t time_sec);
 
 
 void debug_masks_filters(void);
-# 44 "src/common/caniot/utils.h"
+# 44 "src/common/caniot/misc.h"
 void print_attr_ref(attr_ref_t* attr_ref_p);
 # 4 "src/common/caniot/attributes.cpp" 2
 
-const uint8_t resolve_attribute(const key_t key, attr_ref_t *const p_attr_ref)
-{
-    if (((uint8_t) (((uint16_t)key) >> 12)) < (sizeof(attr_sections) / sizeof(attr_sections[0])))
-    {
-        const section_t * const section_p = &attr_sections[((uint8_t) (((uint16_t)key) >> 12))];
+extern constexpr const struct Attributes::attribute_t Attributes::identification_attr[];
+extern constexpr const struct Attributes::attribute_t Attributes::system_attr[];
+extern constexpr const struct Attributes::attribute_t Attributes::config_attr[];
+extern constexpr const struct Attributes::section_t Attributes::attr_sections[];
 
-        if (((uint8_t) ((((uint16_t)key) >> 4) & 0xFF)) < (uint8_t) 
-# 11 "src/common/caniot/attributes.cpp" 3
+const uint8_t Attributes::resolve(const key_t key, attr_ref_t *const p_attr_ref)
+{
+    if (((uint8_t)(((uint16_t)key) >> 12)) < (sizeof(attr_sections) / sizeof(attr_sections[0])))
+    {
+        const section_t * const section_p = &attr_sections[((uint8_t)(((uint16_t)key) >> 12))];
+
+        if (((uint8_t)((((uint16_t)key) >> 4) & 0xFF)) < (uint8_t) 
+# 16 "src/common/caniot/attributes.cpp" 3
                                           (__extension__({ uint16_t __addr16 = (uint16_t)((uint16_t)(
-# 11 "src/common/caniot/attributes.cpp"
+# 16 "src/common/caniot/attributes.cpp"
                                           &section_p->array_size
-# 11 "src/common/caniot/attributes.cpp" 3
+# 16 "src/common/caniot/attributes.cpp" 3
                                           )); uint8_t __result; __asm__ __volatile__ ( "lpm %0, Z" "\n\t" : "=r" (__result) : "z" (__addr16) ); __result; }))
-# 11 "src/common/caniot/attributes.cpp"
+# 16 "src/common/caniot/attributes.cpp"
                                                                                )
         {
             const attribute_t * const attr_array_p = (const attribute_t *) 
-# 13 "src/common/caniot/attributes.cpp" 3
+# 18 "src/common/caniot/attributes.cpp" 3
                                                                           (__extension__({ uint16_t __addr16 = (uint16_t)((uint16_t)(
-# 13 "src/common/caniot/attributes.cpp"
+# 18 "src/common/caniot/attributes.cpp"
                                                                           &section_p->array
-# 13 "src/common/caniot/attributes.cpp" 3
-                                                                          )); uint8_t __result; __asm__ __volatile__ ( "lpm %0, Z" "\n\t" : "=r" (__result) : "z" (__addr16) ); __result; }))
-# 13 "src/common/caniot/attributes.cpp"
+# 18 "src/common/caniot/attributes.cpp" 3
+                                                                          )); uint16_t __result; __asm__ __volatile__ ( "lpm %A0, Z+" "\n\t" "lpm %B0, Z" "\n\t" : "=r" (__result), "=z" (__addr16) : "1" (__addr16) ); __result; }))
+# 18 "src/common/caniot/attributes.cpp"
                                                                                                           ;
-            const attribute_t * const attr_p = &attr_array_p[((uint8_t) ((((uint16_t)key) >> 4) & 0xFF))];
+            const attribute_t * const attr_p = &attr_array_p[((uint8_t)((((uint16_t)key) >> 4) & 0xFF))];
             const uint8_t attr_size = (uint8_t) 
-# 15 "src/common/caniot/attributes.cpp" 3
+# 20 "src/common/caniot/attributes.cpp" 3
                                                (__extension__({ uint16_t __addr16 = (uint16_t)((uint16_t)(
-# 15 "src/common/caniot/attributes.cpp"
+# 20 "src/common/caniot/attributes.cpp"
                                                &attr_p->size
-# 15 "src/common/caniot/attributes.cpp" 3
+# 20 "src/common/caniot/attributes.cpp" 3
                                                )); uint8_t __result; __asm__ __volatile__ ( "lpm %0, Z" "\n\t" : "=r" (__result) : "z" (__addr16) ); __result; }))
-# 15 "src/common/caniot/attributes.cpp"
+# 20 "src/common/caniot/attributes.cpp"
                                                                            ;
 
-            if ((((uint8_t) (((uint16_t)key) & 0xF)) << 2) < attr_size)
+            if ((((uint8_t)(((uint16_t)key) & 0xF)) << 2) < attr_size)
             {
-                const uint8_t attr_offset = (((uint8_t) (((uint16_t)key) & 0xF)) << 2) + (uint8_t) 
-# 19 "src/common/caniot/attributes.cpp" 3
+                const uint8_t attr_offset = (((uint8_t)(((uint16_t)key) & 0xF)) << 2) + (uint8_t) 
+# 24 "src/common/caniot/attributes.cpp" 3
                                                                             (__extension__({ uint16_t __addr16 = (uint16_t)((uint16_t)(
-# 19 "src/common/caniot/attributes.cpp"
+# 24 "src/common/caniot/attributes.cpp"
                                                                             &attr_p->offset
-# 19 "src/common/caniot/attributes.cpp" 3
+# 24 "src/common/caniot/attributes.cpp" 3
                                                                             )); uint8_t __result; __asm__ __volatile__ ( "lpm %0, Z" "\n\t" : "=r" (__result) : "z" (__addr16) ); __result; }))
-# 19 "src/common/caniot/attributes.cpp"
+# 24 "src/common/caniot/attributes.cpp"
                                                                                                           ;
                 const section_option_t option = (section_option_t)(
-# 20 "src/common/caniot/attributes.cpp" 3
+# 25 "src/common/caniot/attributes.cpp" 3
                                                                   (__extension__({ uint16_t __addr16 = (uint16_t)((uint16_t)(
-# 20 "src/common/caniot/attributes.cpp"
+# 25 "src/common/caniot/attributes.cpp"
                                                                   &section_p->options
-# 20 "src/common/caniot/attributes.cpp" 3
+# 25 "src/common/caniot/attributes.cpp" 3
                                                                   )); uint8_t __result; __asm__ __volatile__ ( "lpm %0, Z" "\n\t" : "=r" (__result) : "z" (__addr16) ); __result; })) 
-# 20 "src/common/caniot/attributes.cpp"
+# 25 "src/common/caniot/attributes.cpp"
                                                                                                      |
                                                                    (
-# 21 "src/common/caniot/attributes.cpp" 3
+# 26 "src/common/caniot/attributes.cpp" 3
                                                                    (__extension__({ uint16_t __addr16 = (uint16_t)((uint16_t)(
-# 21 "src/common/caniot/attributes.cpp"
+# 26 "src/common/caniot/attributes.cpp"
                                                                    &attr_p->readonly
-# 21 "src/common/caniot/attributes.cpp" 3
+# 26 "src/common/caniot/attributes.cpp" 3
                                                                    )); uint8_t __result; __asm__ __volatile__ ( "lpm %0, Z" "\n\t" : "=r" (__result) : "z" (__addr16) ); __result; })) 
-# 21 "src/common/caniot/attributes.cpp"
+# 26 "src/common/caniot/attributes.cpp"
                                                                                                     & READONLY));
 
-                *p_attr_ref = {((uint8_t) (((uint16_t)key) >> 12)), option, attr_offset, (uint8_t) ((attr_size < 4) ? (attr_size) : (4))};
+                *p_attr_ref = {((uint8_t)(((uint16_t)key) >> 12)), option, attr_offset, (uint8_t) ((attr_size < 4) ? (attr_size) : (4))};
 
 
 
@@ -4032,4 +4094,92 @@ const uint8_t resolve_attribute(const key_t key, attr_ref_t *const p_attr_ref)
         return 0x13;
     }
     return 0x12;
+}
+
+
+
+
+
+void *Attributes::get_section_address(const uint8_t section)
+{
+    can_device * const p_instance = can_device::get_instance();
+
+    switch (section)
+    {
+    case 0:
+        return &p_instance->identification;
+
+    case 1:
+        return &p_instance->system;
+
+    case 2:
+        return &p_instance->config.data;
+
+
+
+
+    default:
+        return nullptr;
+    }
+}
+
+const uint8_t Attributes::read(const attr_ref_t *const attr_ref, value_t *const p_value)
+{
+    uint8_t err = 0x16;
+    if (attr_ref != nullptr)
+    {
+        const void *p = (void *)((uint16_t)get_section_address(attr_ref->section) + attr_ref->offset);
+        if (attr_ref->options & RAM)
+        {
+            memcpy(p_value, p, attr_ref->read_size);
+        }
+        else if (attr_ref->options & PROGMEMORY)
+        {
+            memcpy_P(p_value, p, attr_ref->read_size);
+        }
+        else if (attr_ref->options & EEPROM)
+        {
+            eeprom_read_block(p_value, p, attr_ref->read_size);
+        }
+        else
+        {
+            return 0xFE;
+        }
+        err = 0x00;
+    }
+    return err;
+}
+
+const uint8_t Attributes::write(const attr_ref_t *const attr_ref, const value_t value)
+{
+    uint8_t err = 0x16;
+    if (attr_ref != nullptr)
+    {
+        if (attr_ref->options & READONLY)
+        {
+            return 0x15;
+        }
+
+        void* p = (void *)((uint16_t)get_section_address(attr_ref->section) + attr_ref->offset);
+        if (attr_ref->options & RAM)
+        {
+            memcpy(p, (void *)&value, attr_ref->read_size);
+        }
+        else if (attr_ref->options & PROGMEMORY)
+        {
+            return 0x15;
+        }
+        else if (attr_ref->options & EEPROM)
+        {
+            eeprom_write_block(p, (void *)&value, attr_ref->read_size);
+
+
+        }
+        else
+        {
+            return 0xFE;
+        }
+        err = 0x00;
+    }
+    return err;
 }

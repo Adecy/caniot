@@ -10,11 +10,11 @@ ELF Header:
   Version:                           0x1
   Entry point address:               0x0
   Start of program headers:          52 (bytes into file)
-  Start of section headers:          24924 (bytes into file)
+  Start of section headers:          25152 (bytes into file)
   Flags:                             0x5, avr:5
   Size of this header:               52 (bytes)
   Size of program headers:           32 (bytes)
-  Number of program headers:         3
+  Number of program headers:         4
   Size of section headers:           40 (bytes)
   Number of section headers:         15
   Section header string table index: 12
@@ -22,20 +22,20 @@ ELF Header:
 Section Headers:
   [Nr] Name              Type            Addr     Off    Size   ES Flg Lk Inf Al
   [ 0]                   NULL            00000000 000000 000000 00      0   0  0
-  [ 1] .data             PROGBITS        00800100 002c1b 000138 00  WA  0   0  1
-  [ 2] .text             PROGBITS        00000000 000094 002b87 00  AX  0   0  2
-  [ 3] .bss              NOBITS          00800238 002d53 0000e8 00  WA  0   0  1
-  [ 4] .comment          PROGBITS        00000000 002d53 000011 01  MS  0   0  1
-  [ 5] .note.gnu.avr.dev NOTE            00000000 002d64 000040 00      0   0  4
-  [ 6] .avr.prop         PROGBITS        00000000 002da4 00001f 00      0   0  1
-  [ 7] .debug_aranges    PROGBITS        00000000 002dc8 0000e0 00      0   0  8
-  [ 8] .debug_info       PROGBITS        00000000 002ea8 000b11 00      0   0  1
-  [ 9] .debug_abbrev     PROGBITS        00000000 0039b9 00062e 00      0   0  1
-  [10] .debug_line       PROGBITS        00000000 003fe7 000478 00      0   0  1
-  [11] .debug_str        PROGBITS        00000000 00445f 000208 00      0   0  1
-  [12] .shstrtab         STRTAB          00000000 0060c2 000098 00      0   0  1
-  [13] .symtab           SYMTAB          00000000 004668 000bd0 10     14 114  4
-  [14] .strtab           STRTAB          00000000 005238 000e8a 00      0   0  1
+  [ 1] .data             PROGBITS        00800100 002c58 000138 00  WA  0   0  1
+  [ 2] .text             PROGBITS        00000000 0000b4 002ba4 00  AX  0   0  2
+  [ 3] .bss              NOBITS          00800238 002db3 0000af 00  WA  0   0  1
+  [ 4] .comment          PROGBITS        00000000 002db3 000011 01  MS  0   0  1
+  [ 5] .note.gnu.avr.dev NOTE            00000000 002dc4 000040 00      0   0  4
+  [ 6] .debug_aranges    PROGBITS        00000000 002e08 0000e0 00      0   0  8
+  [ 7] .debug_info       PROGBITS        00000000 002ee8 000b11 00      0   0  1
+  [ 8] .debug_abbrev     PROGBITS        00000000 0039f9 00062e 00      0   0  1
+  [ 9] .debug_line       PROGBITS        00000000 004027 000478 00      0   0  1
+  [10] .debug_str        PROGBITS        00000000 00449f 000208 00      0   0  1
+  [11] .device_identific PROGBITS        000077dd 002d90 000023 00   A  0   0  1
+  [12] .shstrtab         STRTAB          00000000 006199 0000a5 00      0   0  1
+  [13] .symtab           SYMTAB          00000000 0046a8 000c00 10     14 114  4
+  [14] .strtab           STRTAB          00000000 0052a8 000ef1 00      0   0  1
 Key to Flags:
   W (write), A (alloc), X (execute), M (merge), S (strings)
   I (info), L (link order), G (group), T (TLS), E (exclude), x (unknown)
@@ -45,15 +45,17 @@ There are no section groups in this file.
 
 Program Headers:
   Type           Offset   VirtAddr   PhysAddr   FileSiz MemSiz  Flg Align
-  LOAD           0x000094 0x00000000 0x00000000 0x02b87 0x02b87 R E 0x2
-  LOAD           0x002c1b 0x00800100 0x00002b87 0x00138 0x00138 RW  0x1
-  LOAD           0x002d53 0x00800238 0x00800238 0x00000 0x000e8 RW  0x1
+  LOAD           0x0000b4 0x00000000 0x00000000 0x02ba4 0x02ba4 R E 0x2
+  LOAD           0x002c58 0x00800100 0x00002ba4 0x00138 0x00138 RW  0x1
+  LOAD           0x002d90 0x000077dd 0x000077dd 0x00023 0x00023 R   0x1
+  LOAD           0x002db3 0x00800238 0x00800238 0x00000 0x000af RW  0x1
 
  Section to Segment mapping:
   Segment Sections...
    00     .text 
    01     .data 
-   02     .bss 
+   02     .device_identification 
+   03     .bss 
 
 There is no dynamic section in this file.
 
@@ -61,7 +63,7 @@ There are no relocations in this file.
 
 The decoding of unwind sections for machine type Atmel AVR 8-bit microcontroller is not currently supported.
 
-Symbol table '.symtab' contains 189 entries:
+Symbol table '.symtab' contains 192 entries:
    Num:    Value  Size Type    Bind   Vis      Ndx Name
      0: 00000000     0 NOTYPE  LOCAL  DEFAULT  UND 
      1: 00800100     0 SECTION LOCAL  DEFAULT    1 
@@ -74,16 +76,16 @@ Symbol table '.symtab' contains 189 entries:
      8: 00000000     0 SECTION LOCAL  DEFAULT    8 
      9: 00000000     0 SECTION LOCAL  DEFAULT    9 
     10: 00000000     0 SECTION LOCAL  DEFAULT   10 
-    11: 00000000     0 SECTION LOCAL  DEFAULT   11 
+    11: 000077dd     0 SECTION LOCAL  DEFAULT   11 
     12: 00000000     0 FILE    LOCAL  DEFAULT  ABS 
     13: 0000003e     0 NOTYPE  LOCAL  DEFAULT  ABS __SP_H__
     14: 0000003d     0 NOTYPE  LOCAL  DEFAULT  ABS __SP_L__
     15: 0000003f     0 NOTYPE  LOCAL  DEFAULT  ABS __SREG__
     16: 00000000     0 NOTYPE  LOCAL  DEFAULT  ABS __tmp_reg__
     17: 00000001     0 NOTYPE  LOCAL  DEFAULT  ABS __zero_reg__
-    18: 000004e2   204 FUNC    LOCAL  DEFAULT    2 delay.constprop.21
-    19: 0080031c     4 OBJECT  LOCAL  DEFAULT    3 timer0_overflow_count
-    20: 000005ae    62 FUNC    LOCAL  DEFAULT    2 pinMode.constprop.20
+    18: 000004e2   204 FUNC    LOCAL  DEFAULT    2 delay.constprop.19
+    19: 008002e3     4 OBJECT  LOCAL  DEFAULT    3 timer0_overflow_count
+    20: 000005ae    62 FUNC    LOCAL  DEFAULT    2 pinMode.constprop.18
     21: 00000478    20 OBJECT  LOCAL  DEFAULT    2 digital_pin_to_bit_mask_P
     22: 00000464    20 OBJECT  LOCAL  DEFAULT    2 digital_pin_to_port_PGM
     23: 0000045a    10 OBJECT  LOCAL  DEFAULT    2 port_to_mode_PGM
@@ -134,127 +136,130 @@ Symbol table '.symtab' contains 189 entries:
     68: 0000187e    90 FUNC    LOCAL  DEFAULT    2 _ZN11mcp2515_can10readMsg
     69: 000018d8     4 FUNC    LOCAL  DEFAULT    2 _ZN11mcp2515_can15getLast
     70: 000018dc    12 FUNC    LOCAL  DEFAULT    2 _ZN11mcp2515_can16reserve
-    71: 000018e8    50 FUNC    LOCAL  DEFAULT    2 _ZN20GarageDoorController
+    71: 000018e8    48 FUNC    LOCAL  DEFAULT    2 _ZN20GarageDoorController
     72: 0080023d     2 OBJECT  LOCAL  DEFAULT    3 _ZN10can_device10p_instan
     73: 00000434     8 OBJECT  LOCAL  DEFAULT    2 _ZL14data_type_size
-    74: 0000191a    52 FUNC    LOCAL  DEFAULT    2 usart_hex
+    74: 00001918    52 FUNC    LOCAL  DEFAULT    2 usart_hex
     75: 00800106    16 OBJECT  LOCAL  DEFAULT    1 _usart_alpha16
-    76: 0000194e    14 FUNC    LOCAL  DEFAULT    2 usart_transmit
-    77: 0000195c   198 FUNC    LOCAL  DEFAULT    2 _Z17resolve_attributejP10
-    78: 0000031d    57 OBJECT  LOCAL  DEFAULT    2 _ZL13attr_sections
-    79: 00001a22     4 FUNC    LOCAL  DEFAULT    2 __cxa_pure_virtual
-    80: 00001a26   160 FUNC    LOCAL  DEFAULT    2 _ZN20GarageDoorController
-    81: 00001ac6    54 FUNC    LOCAL  DEFAULT    2 usart_print_p
-    82: 00001afc    46 FUNC    LOCAL  DEFAULT    2 usart_print
-    83: 00001b2a    66 FUNC    LOCAL  DEFAULT    2 _Z17print_prog_stringPKch
-    84: 00001b6c   384 FUNC    LOCAL  DEFAULT    2 _Z14print_can_expl8can_id
+    76: 0000194c    14 FUNC    LOCAL  DEFAULT    2 usart_transmit
+    77: 0000195a   196 FUNC    LOCAL  DEFAULT    2 _ZN10Attributes7resolveEj
+    78: 0000031d    57 OBJECT  LOCAL  DEFAULT    2 _ZN10Attributes13attr_sec
+    79: 00001a1e     4 FUNC    LOCAL  DEFAULT    2 __cxa_pure_virtual
+    80: 00001a22   160 FUNC    LOCAL  DEFAULT    2 _ZN20GarageDoorController
+    81: 00001ac2    54 FUNC    LOCAL  DEFAULT    2 usart_print_p
+    82: 00001af8    62 FUNC    LOCAL  DEFAULT    2 usart_print
+    83: 00001b36    66 FUNC    LOCAL  DEFAULT    2 _Z17print_prog_stringPKch
+    84: 00001b78   384 FUNC    LOCAL  DEFAULT    2 _Z14print_can_expl8can_id
     85: 000003e2    17 OBJECT  LOCAL  DEFAULT    2 _ZL21caniot_msg_query_res
     86: 000003af    51 OBJECT  LOCAL  DEFAULT    2 _ZL16caniot_msg_types
     87: 00000394    27 OBJECT  LOCAL  DEFAULT    2 _ZL20msg_can_send_between
     88: 00000356    62 OBJECT  LOCAL  DEFAULT    2 _ZL22caniot_msg_controlle
     89: 00000410    36 OBJECT  LOCAL  DEFAULT    2 _ZL27caniot_msg_data_fram
-    90: 00001cec   170 FUNC    LOCAL  DEFAULT    2 _ZN10can_device13send_res
-    91: 00800245   215 OBJECT  LOCAL  DEFAULT    3 controller
-    92: 00001d96   142 FUNC    LOCAL  DEFAULT    2 _ZN10can_device14read_att
+    90: 00001cf8   170 FUNC    LOCAL  DEFAULT    2 _ZN10can_device13send_res
+    91: 00800245   158 OBJECT  LOCAL  DEFAULT    3 controller
+    92: 00001da2   122 FUNC    LOCAL  DEFAULT    2 _ZN10Attributes4readEPK10
     93: 00800240     1 OBJECT  LOCAL  DEFAULT    3 timer0_fract
-    94: 00001f3a   272 FUNC    LOCAL  DEFAULT    2 _GLOBAL__sub_I_controller
+    94: 00001f32   276 FUNC    LOCAL  DEFAULT    2 _GLOBAL__sub_I_controller
     95: 0080014e     6 OBJECT  LOCAL  DEFAULT    1 _ZTV10can_device
-    96: 0080014e     6 OBJECT  LOCAL  DEFAULT    1 _ZTV20GarageDoorControlle
-    97: 00800116    56 OBJECT  LOCAL  DEFAULT    1 _ZTV7MCP_CAN
-    98: 0080023c     1 OBJECT  LOCAL  DEFAULT    3 SPI
-    99: 00800154    56 OBJECT  LOCAL  DEFAULT    1 _ZTV11mcp2515_can
-   100: 00800238     4 OBJECT  LOCAL  DEFAULT    3 timer2_counter
-   101: 000003f3    29 OBJECT  LOCAL  DEFAULT    2 _ZZN10can_device10initial
-   102: 00002b64    35 OBJECT  LOCAL  DEFAULT    2 _ZL13_anonymous_id
-   103: 00000068    33 OBJECT  LOCAL  DEFAULT    2 _ZL11config_attr
-   104: 00000089   561 OBJECT  LOCAL  DEFAULT    2 _ZL11system_attr
-   105: 000002ba    99 OBJECT  LOCAL  DEFAULT    2 _ZL19identification_attr
-   106: 00000000     0 FILE    LOCAL  DEFAULT  ABS _exit.o
-   107: 00002b62     0 NOTYPE  LOCAL  DEFAULT    2 __stop_program
-   108: 00000000     0 FILE    LOCAL  DEFAULT  ABS _udivmodsi4.o
-   109: 00002afc     0 NOTYPE  LOCAL  DEFAULT    2 __udivmodsi4_ep
-   110: 00002ae2     0 NOTYPE  LOCAL  DEFAULT    2 __udivmodsi4_loop
-   111: 00000000     0 FILE    LOCAL  DEFAULT  ABS _clear_bss.o
-   112: 000004ba     0 NOTYPE  LOCAL  DEFAULT    2 .do_clear_bss_start
-   113: 000004b8     0 NOTYPE  LOCAL  DEFAULT    2 .do_clear_bss_loop
+    96: 000077dd    35 OBJECT  LOCAL  DEFAULT   11 _ZL21device_identificatio
+    97: 0080014e     6 OBJECT  LOCAL  DEFAULT    1 _ZTV20GarageDoorControlle
+    98: 00800116    56 OBJECT  LOCAL  DEFAULT    1 _ZTV7MCP_CAN
+    99: 0080023c     1 OBJECT  LOCAL  DEFAULT    3 SPI
+   100: 00800154    56 OBJECT  LOCAL  DEFAULT    1 _ZTV11mcp2515_can
+   101: 00800238     4 OBJECT  LOCAL  DEFAULT    3 timer2_counter
+   102: 000003f3    29 OBJECT  LOCAL  DEFAULT    2 _ZZN10can_device10initial
+   103: 00000068    33 OBJECT  LOCAL  DEFAULT    2 _ZN10Attributes11config_a
+   104: 00000089   561 OBJECT  LOCAL  DEFAULT    2 _ZN10Attributes11system_a
+   105: 000002ba    99 OBJECT  LOCAL  DEFAULT    2 _ZN10Attributes19identifi
+   106: 00000000     0 FILE    LOCAL  DEFAULT  ABS _clear_bss.o
+   107: 000004ba     0 NOTYPE  LOCAL  DEFAULT    2 .do_clear_bss_start
+   108: 000004b8     0 NOTYPE  LOCAL  DEFAULT    2 .do_clear_bss_loop
+   109: 00000000     0 FILE    LOCAL  DEFAULT  ABS _udivmodsi4.o
+   110: 00002b3c     0 NOTYPE  LOCAL  DEFAULT    2 __udivmodsi4_ep
+   111: 00002b22     0 NOTYPE  LOCAL  DEFAULT    2 __udivmodsi4_loop
+   112: 00000000     0 FILE    LOCAL  DEFAULT  ABS _exit.o
+   113: 00002ba2     0 NOTYPE  LOCAL  DEFAULT    2 __stop_program
    114: 000004de     0 NOTYPE  WEAK   DEFAULT    2 __vector_22
-   115: 00002abc     0 NOTYPE  GLOBAL DEFAULT    2 eeprom_write_r18
-   116: 00002b26    30 NOTYPE  GLOBAL HIDDEN     2 __umulhisi3
-   117: 00001f08    50 FUNC    GLOBAL DEFAULT    2 __vector_1
-   118: 00002b64     0 NOTYPE  GLOBAL DEFAULT    2 __device_identification__
-   119: 0000ffa0     0 NOTYPE  GLOBAL DEFAULT  ABS __DATA_REGION_LENGTH__
-   120: 00002a9a    12 FUNC    GLOBAL DEFAULT    2 eeprom_read_dword
-   121: 00000068     0 NOTYPE  GLOBAL DEFAULT    2 __trampolines_start
-   122: 00002b64     0 NOTYPE  GLOBAL DEFAULT    2 _etext
+   115: 00002ad8     0 NOTYPE  GLOBAL DEFAULT    2 eeprom_write_r18
+   116: 00002b66    30 NOTYPE  GLOBAL HIDDEN     2 __umulhisi3
+   117: 00001f00    50 FUNC    GLOBAL DEFAULT    2 __vector_1
+   118: 0000ffa0     0 NOTYPE  GLOBAL DEFAULT  ABS __DATA_REGION_LENGTH__
+   119: 00002a9e    12 FUNC    GLOBAL DEFAULT    2 eeprom_read_dword
+   120: 00000068     0 NOTYPE  GLOBAL DEFAULT    2 __trampolines_start
+   121: 00002aaa    24 FUNC    GLOBAL DEFAULT    2 eeprom_update_dword
+   122: 00002ba4     0 NOTYPE  GLOBAL DEFAULT    2 _etext
    123: 000004de     0 NOTYPE  WEAK   DEFAULT    2 __vector_24
    124: 000004de     0 NOTYPE  WEAK   DEFAULT    2 __vector_12
    125: 000004de     0 NOTYPE  GLOBAL DEFAULT    2 __bad_interrupt
-   126: 00002a68    18 FUNC    GLOBAL DEFAULT    2 __strlen_P
-   127: 00002b4e    18 FUNC    GLOBAL DEFAULT    2 memcpy
-   128: 00002cbf     0 NOTYPE  GLOBAL DEFAULT  ABS __data_load_end
+   126: 00002a6c    18 FUNC    GLOBAL DEFAULT    2 __strlen_P
+   127: 00002b8e    18 FUNC    GLOBAL DEFAULT    2 memcpy
+   128: 00002cdc     0 NOTYPE  GLOBAL DEFAULT  ABS __data_load_end
    129: 000004de     0 NOTYPE  WEAK   DEFAULT    2 __vector_6
    130: 00000068     0 NOTYPE  GLOBAL DEFAULT    2 __trampolines_end
    131: 000004de     0 NOTYPE  WEAK   DEFAULT    2 __vector_3
    132: 000004de     0 NOTYPE  WEAK   DEFAULT    2 __vector_23
-   133: 00002b87     0 NOTYPE  GLOBAL DEFAULT  ABS __data_load_start
+   133: 00002ba4     0 NOTYPE  GLOBAL DEFAULT  ABS __data_load_start
    134: 0000048e     0 NOTYPE  GLOBAL DEFAULT    2 __dtors_end
-   135: 00800320     0 NOTYPE  GLOBAL DEFAULT    3 __bss_end
+   135: 008002e7     0 NOTYPE  GLOBAL DEFAULT    3 __bss_end
    136: 00000400     0 NOTYPE  GLOBAL DEFAULT  ABS __LOCK_REGION_LENGTH__
-   137: 00002b44    10 FUNC    GLOBAL DEFAULT    2 abort
+   137: 00002b84    10 FUNC    GLOBAL DEFAULT    2 abort
    138: 000004de     0 NOTYPE  WEAK   DEFAULT    2 __vector_25
-   139: 00002aba    28 FUNC    GLOBAL DEFAULT    2 eeprom_write_byte
+   139: 00002ad6    28 FUNC    GLOBAL DEFAULT    2 eeprom_write_byte
    140: 000004de     0 NOTYPE  WEAK   DEFAULT    2 __vector_11
    141: 0000048e     0 NOTYPE  WEAK   DEFAULT    2 __init
-   142: 000004de     0 NOTYPE  WEAK   DEFAULT    2 __vector_13
-   143: 000004de     0 NOTYPE  WEAK   DEFAULT    2 __vector_17
-   144: 000004de     0 NOTYPE  WEAK   DEFAULT    2 __vector_19
-   145: 000004de     0 NOTYPE  WEAK   DEFAULT    2 __vector_7
-   146: 000004b0    16 NOTYPE  GLOBAL HIDDEN     2 __do_clear_bss
-   147: 00810000     0 NOTYPE  GLOBAL DEFAULT    4 __eeprom_end
-   148: 00000000     0 NOTYPE  GLOBAL DEFAULT    2 __vectors
-   149: 00800238     0 NOTYPE  GLOBAL DEFAULT    1 __data_end
-   150: 00000000     0 NOTYPE  WEAK   DEFAULT    2 __vector_default
-   151: 000004de     0 NOTYPE  WEAK   DEFAULT    2 __vector_5
-   152: 00000400     0 NOTYPE  GLOBAL DEFAULT  ABS __SIGNATURE_REGION_LENGTH
-   153: 00002b1a    12 NOTYPE  GLOBAL HIDDEN     2 __tablejump2__
-   154: 0000048c     0 NOTYPE  GLOBAL DEFAULT    2 __ctors_start
-   155: 00002a7a    32 FUNC    GLOBAL DEFAULT    2 eeprom_read_block
-   156: 0000049a    22 NOTYPE  GLOBAL HIDDEN     2 __do_copy_data
-   157: 00800238     0 NOTYPE  GLOBAL DEFAULT    3 __bss_start
-   158: 0000204a  2572 FUNC    GLOBAL DEFAULT    2 main
-   159: 000004de     0 NOTYPE  WEAK   DEFAULT    2 __vector_4
-   160: 00002a9a     0 NOTYPE  GLOBAL DEFAULT    2 eeprom_read_float
-   161: 00000000     0 NOTYPE  WEAK   DEFAULT  ABS __heap_end
-   162: 00001eb8    80 FUNC    GLOBAL DEFAULT    2 __vector_9
-   163: 000004de     0 NOTYPE  WEAK   DEFAULT    2 __vector_2
-   164: 00000400     0 NOTYPE  GLOBAL DEFAULT  ABS __USER_SIGNATURE_REGION_L
-   165: 00002a56    18 FUNC    GLOBAL DEFAULT    2 memcpy_P
-   166: 000004de     0 NOTYPE  WEAK   DEFAULT    2 __vector_21
-   167: 000004de     0 NOTYPE  WEAK   DEFAULT    2 __vector_15
-   168: 0000048e     0 NOTYPE  GLOBAL DEFAULT    2 __dtors_start
-   169: 0000048e     0 NOTYPE  GLOBAL DEFAULT    2 __ctors_end
-   170: 000008ff     0 NOTYPE  WEAK   DEFAULT  ABS __stack
-   171: 00800238     0 NOTYPE  GLOBAL DEFAULT    1 _edata
-   172: 00800320     0 NOTYPE  GLOBAL DEFAULT    4 _end
-   173: 00002a7e     0 NOTYPE  GLOBAL DEFAULT    2 eeprom_read_blraw
-   174: 000004de     0 NOTYPE  WEAK   DEFAULT    2 __vector_8
-   175: 00002b60     0 NOTYPE  WEAK   HIDDEN     2 exit
-   176: 00002ad6    68 NOTYPE  GLOBAL HIDDEN     2 __udivmodsi4
-   177: 00010000     0 NOTYPE  GLOBAL DEFAULT  ABS __EEPROM_REGION_LENGTH__
-   178: 00002b60     0 NOTYPE  GLOBAL HIDDEN     2 _exit
-   179: 000004de     0 NOTYPE  WEAK   DEFAULT    2 __vector_14
-   180: 000004de     0 NOTYPE  WEAK   DEFAULT    2 __vector_10
-   181: 00001e24   148 FUNC    GLOBAL DEFAULT    2 __vector_16
-   182: 00800100     0 NOTYPE  GLOBAL DEFAULT    1 __data_start
-   183: 00002aa6    20 FUNC    GLOBAL DEFAULT    2 eeprom_write_block
-   184: 000004de     0 NOTYPE  WEAK   DEFAULT    2 __vector_18
-   185: 00000003     0 NOTYPE  GLOBAL DEFAULT  ABS __FUSE_REGION_LENGTH__
-   186: 00020000     0 NOTYPE  GLOBAL DEFAULT  ABS __TEXT_REGION_LENGTH__
-   187: 000004de     0 NOTYPE  WEAK   DEFAULT    2 __vector_20
-   188: 000004c0    22 NOTYPE  GLOBAL HIDDEN     2 __do_global_ctors
+   142: 00002af4     0 NOTYPE  GLOBAL DEFAULT    2 eeprom_update_r18
+   143: 000004de     0 NOTYPE  WEAK   DEFAULT    2 __vector_13
+   144: 000004de     0 NOTYPE  WEAK   DEFAULT    2 __vector_17
+   145: 000004de     0 NOTYPE  WEAK   DEFAULT    2 __vector_19
+   146: 000004de     0 NOTYPE  WEAK   DEFAULT    2 __vector_7
+   147: 000004b0    16 NOTYPE  GLOBAL HIDDEN     2 __do_clear_bss
+   148: 00810000     0 NOTYPE  GLOBAL DEFAULT    4 __eeprom_end
+   149: 00000000     0 NOTYPE  GLOBAL DEFAULT    2 __vectors
+   150: 00800238     0 NOTYPE  GLOBAL DEFAULT    1 __data_end
+   151: 00000000     0 NOTYPE  WEAK   DEFAULT    2 __vector_default
+   152: 000004de     0 NOTYPE  WEAK   DEFAULT    2 __vector_5
+   153: 00002af2    36 FUNC    GLOBAL DEFAULT    2 eeprom_update_byte
+   154: 00000400     0 NOTYPE  GLOBAL DEFAULT  ABS __SIGNATURE_REGION_LENGTH
+   155: 00002b5a    12 NOTYPE  GLOBAL HIDDEN     2 __tablejump2__
+   156: 0000048c     0 NOTYPE  GLOBAL DEFAULT    2 __ctors_start
+   157: 00002a7e    32 FUNC    GLOBAL DEFAULT    2 eeprom_read_block
+   158: 0000049a    22 NOTYPE  GLOBAL HIDDEN     2 __do_copy_data
+   159: 00800238     0 NOTYPE  GLOBAL DEFAULT    3 __bss_start
+   160: 00002046  2580 FUNC    GLOBAL DEFAULT    2 main
+   161: 000004de     0 NOTYPE  WEAK   DEFAULT    2 __vector_4
+   162: 00002a9e     0 NOTYPE  GLOBAL DEFAULT    2 eeprom_read_float
+   163: 00000000     0 NOTYPE  WEAK   DEFAULT  ABS __heap_end
+   164: 00001eb0    80 FUNC    GLOBAL DEFAULT    2 __vector_9
+   165: 000004de     0 NOTYPE  WEAK   DEFAULT    2 __vector_2
+   166: 00000400     0 NOTYPE  GLOBAL DEFAULT  ABS __USER_SIGNATURE_REGION_L
+   167: 00002a5a    18 FUNC    GLOBAL DEFAULT    2 memcpy_P
+   168: 000004de     0 NOTYPE  WEAK   DEFAULT    2 __vector_21
+   169: 000004de     0 NOTYPE  WEAK   DEFAULT    2 __vector_15
+   170: 0000048e     0 NOTYPE  GLOBAL DEFAULT    2 __dtors_start
+   171: 0000048e     0 NOTYPE  GLOBAL DEFAULT    2 __ctors_end
+   172: 000008ff     0 NOTYPE  WEAK   DEFAULT  ABS __stack
+   173: 00800238     0 NOTYPE  GLOBAL DEFAULT    1 _edata
+   174: 008002e7     0 NOTYPE  GLOBAL DEFAULT    4 _end
+   175: 00002a82     0 NOTYPE  GLOBAL DEFAULT    2 eeprom_read_blraw
+   176: 000004de     0 NOTYPE  WEAK   DEFAULT    2 __vector_8
+   177: 00002ba0     0 NOTYPE  WEAK   HIDDEN     2 exit
+   178: 00002b16    68 NOTYPE  GLOBAL HIDDEN     2 __udivmodsi4
+   179: 00010000     0 NOTYPE  GLOBAL DEFAULT  ABS __EEPROM_REGION_LENGTH__
+   180: 00002ba0     0 NOTYPE  GLOBAL HIDDEN     2 _exit
+   181: 000004de     0 NOTYPE  WEAK   DEFAULT    2 __vector_14
+   182: 000004de     0 NOTYPE  WEAK   DEFAULT    2 __vector_10
+   183: 00001e1c   148 FUNC    GLOBAL DEFAULT    2 __vector_16
+   184: 00800100     0 NOTYPE  GLOBAL DEFAULT    1 __data_start
+   185: 00002ac2    20 FUNC    GLOBAL DEFAULT    2 eeprom_write_block
+   186: 000004de     0 NOTYPE  WEAK   DEFAULT    2 __vector_18
+   187: 00000003     0 NOTYPE  GLOBAL DEFAULT  ABS __FUSE_REGION_LENGTH__
+   188: 00020000     0 NOTYPE  GLOBAL DEFAULT  ABS __TEXT_REGION_LENGTH__
+   189: 000004de     0 NOTYPE  WEAK   DEFAULT    2 __vector_20
+   190: 00002aaa     0 NOTYPE  GLOBAL DEFAULT    2 eeprom_update_float
+   191: 000004c0    22 NOTYPE  GLOBAL HIDDEN     2 __do_global_ctors
 
 No version information found in this file.
 
-Displaying notes found at file offset 0x00002d64 with length 0x00000040:
+Displaying notes found at file offset 0x00002dc4 with length 0x00000040:
   Owner                 Data size	Description
   AVR                  0x0000002d	NT_VERSION (version)
