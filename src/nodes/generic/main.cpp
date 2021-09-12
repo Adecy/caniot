@@ -85,7 +85,7 @@ int main()
     dev.set_telemetry_builder(telemetry_builder);
     dev.set_command_handler(command_handler);
 
-    dev.p_config->telemetry_period = 10*60; // sec
+    dev.config.set_telemetry_period(10*60);
 
     debug_masks_filters();
     

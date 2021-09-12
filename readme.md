@@ -10,7 +10,12 @@ This list reference versions :
     
 
 
-# Points
+# Todo
+
+- flag/functions to temporarily disable command handler
+- sleep when no event
+- don't send two telemetry message in a row (minimum wait delay ?)
+
 
 ## Low power
 

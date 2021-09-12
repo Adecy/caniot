@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "*.asm": "avr",
+        "tqueue.h": "c",
+        "stddef.h": "c",
+        "defines.h": "c"
+    }
+}

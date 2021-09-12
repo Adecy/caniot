@@ -7,3 +7,7 @@
 [submodule "src/nodes/outsens"]
 	path = src/nodes/outsens
 	url = ssh://git@gitlab.adecy.fr:2224/dietrich/can/caniot/outsens1.git
+[submodule "src/nodes/tempsens"]
+	path = src/nodes/tempsens
+[submodule "src/nodes/custompcb1"]
+	path = src/nodes/custompcb1
