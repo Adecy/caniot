@@ -11,3 +11,5 @@
 	path = src/nodes/tempsens
 [submodule "src/nodes/custompcb1"]
 	path = src/nodes/custompcb1
+[submodule "src/nodes/fake-device"]
+	path = src/nodes/fake-device
